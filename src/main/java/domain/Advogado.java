@@ -1,13 +1,30 @@
 package domain;
 
+import jakarta.persistence.*;
+import org.checkerframework.common.aliasing.qual.Unique;
+
+@Entity
+@Table(name = "TB_ADVOGADO", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_OAB_ADVOGADO", columnNames = "OAB")
+})
 public class Advogado {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ADVOGADO")
+    @SequenceGenerator(name = "SQ_ADVOGADO", sequenceName = "SQ_ADVOGADO")
+    @Column(name = "ID_ADVOGADO")
     private long id;
 
+    @Column(name = "NM_ADVOGADO")
     private String nome;
 
+    @Column(name = "OAB")
     private String numeroOAB;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO",
+            foreignKey = @ForeignKey(name = "FK_ADVOGADO_ESTADO", value = ConstraintMode.CONSTRAINT)
+    )
     private Estado estado;
 
     public Advogado() {

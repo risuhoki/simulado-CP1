@@ -1,19 +1,42 @@
 package domain;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+
 import java.time.LocalDate;
+
+@Entity
+@Table(name = "TB_PROCESSO", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_NR_PROCESSO", columnNames = "NR_PROCESSO")
+})
 
 public class Processo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_PROCESSO")
+    @SequenceGenerator(name = "SQ_PROCESSO", sequenceName = "SQ_PROCESSO")
+    @Column(name = "ID_PROCESSO")
     private long id;
 
+    @Column(name = "NR_PROCESSO")
     private String numero;
 
+    @Column(name = "DT_DISTRIBUICAO")
     private LocalDate dataDeDistribuicao;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "NM_TP_ACAO", referencedColumnName = "NM_TP_ACAO",
+    foreignKey = @ForeignKey(name = "FK_TP_ACAO", value = ConstraintMode.CONSTRAINT)
+    )
     private TipoDeAcao tipoDeAcao;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "ID_ADVOGADO", referencedColumnName = "ID_ADVOGADO",
+            foreignKey = @ForeignKey(name = "FK_PROC_ADVOGADO", value = ConstraintMode.CONSTRAINT)
+    )
     private Advogado advogado;
 
+    @Column(name = "PRO_BONO")
     private boolean proBono;
 
 
